@@ -3,14 +3,14 @@ import { registerUser } from "../Controller/user.controller.js";
 import { upload } from '../MiddleWare/multer.middlerware.js'
 const router = Router()
 
-router.route('/register').post(
+router.route("/register").post(
     upload.fields([
         {
             name: "avatar",
             maxCount: 1
         },
         {
-            name: 'coverImage',
+            name: "coverImage",
             maxCount: 1
         }
     ]),
@@ -18,4 +18,4 @@ router.route('/register').post(
 )
 
 
-export default router;
+export default router

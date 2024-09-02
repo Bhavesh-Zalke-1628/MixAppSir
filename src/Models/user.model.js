@@ -26,7 +26,7 @@ const userSchema = new Schema(
         },
         avatar: {
             type: String,
-            required: true,
+            // required: true,
         },
         coverImage: {
             type: String,
@@ -87,4 +87,4 @@ userSchema.methods.generateRefreshToken = function () {
     )
 }
 
-const User = model("User", userSchema)
+export const User = model("User", userSchema)
