@@ -1,3 +1,5 @@
+import { config } from "dotenv";
+config()
 import { v2 as cloudinary } from "cloudinary"
 import fs from "fs"
 
@@ -7,6 +9,10 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
+
+console.log('api secret', process.env.CLOUDINARY_API_SECRET)
+console.log(process.env.CLOUDINARY_API_KEY)
+console.log(process.env.CLOUDINARY_CLOUD_NAME)
 const uploadOnCloudinary = async (localFilePath) => {
     try {
         if (!localFilePath) return null
@@ -28,3 +34,6 @@ const uploadOnCloudinary = async (localFilePath) => {
 
 
 export { uploadOnCloudinary }
+
+
+
