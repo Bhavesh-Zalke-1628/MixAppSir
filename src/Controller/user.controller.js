@@ -6,6 +6,7 @@ import { User } from "../models/user.model.js"
 import { uploadOnCloudinary } from "../utils/cloudinary.js"
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from 'jsonwebtoken'
+import mongoose from 'mongoose'
 
 const generateAccessAndRefreshToken = async (userId) => {
     try {
@@ -191,7 +192,7 @@ const logoutUser = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, {}, "User logged out successfully"))
 })
 
-const refreshAccessToken = asyncHandler(async (res, res) => {
+const refreshAccessToken = asyncHandler(async (req, res) => {
     try {
         const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken
 
@@ -411,6 +412,60 @@ const getUserChangelProfile = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, chanel[0], "User chanel fetched successfully"))
 })
 
+const getWatchHistory = asyncHandler(async (req, res) => {
+    const user = await User.aggregate([
+        {
+            $match: {
+                _id: new mongoose.Types.ObjectId(req.user?._id)
+            }
+        },
+        {
+            $lookup: {
+                from: 'videos',
+                localField: 'watchHistory',
+                foreignField: '_id',
+                as: "watchHistory",
+                pipeline: [
+                    {
+                        $lookup: {
+                            from: 'users',
+                            localField: 'owener',
+                            foreignField: "_id",
+                            as: "owener",
+                            pipeline: [
+                                {
+                                    $project: {
+                                        fullName: 1,
+                                        username: 1,
+                                        avatar: 1
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        $addFields: {
+                            owener: {
+                                $first: "$owener"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ])
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                user[0].watchHistory,
+                "Watchhistory fetch successfully"
+            )
+        )
+})
+
 export {
     registerUser,
     loginUser,
@@ -422,5 +477,6 @@ export {
     updateUserAvatar,
     updateUserAvatar,
     updateUserCoverImage,
-    getUserChangelProfile
+    getUserChangelProfile,
+    getWatchHistory
 }
