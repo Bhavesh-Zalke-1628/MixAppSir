@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { changeCurrentPassword, getCurrentUser, getUserChangelProfile, getWatchHistory, loginUser, logoutUser, refreshAccessToken, registerUser, updateAccountDetailed, updateUserAvatar, updateUserCoverImage } from "../Controller/user.controller.js";
-import { upload } from '../MiddleWare/multer.middlerware.js'
-import { verifyJWT } from "../MiddleWare/auth.middleware.js";
+import { changeCurrentPassword, getCurrentUser, getUserChangelProfile, getWatchHistory, loginUser, logoutUser, refreshAccessToken, registerUser, updateAccountDetailed, updateUserAvatar, updateUserCoverImage } from "../controller/user.controller.js";
+import { upload } from '../middleware/multer.middleware.js'
+import { verifyJWT } from "../middleware/auth.middleware.js";
 const router = Router()
 
 router.route("/register").post(
