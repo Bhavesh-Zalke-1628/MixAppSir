@@ -172,8 +172,8 @@ const logoutUser = asyncHandler(async (req, res) => {
     User.findByIdAndUpdate(
         _id,
         {
-            $set: {
-                refreshToken: undefined
+            $unset: {
+                refreshToken: 1 //remove filed from the document
             }
         },
         {
@@ -474,7 +474,6 @@ export {
     updateAccountDetailed,
     changeCurrentPassword,
     getCurrentUser,
-    updateUserAvatar,
     updateUserAvatar,
     updateUserCoverImage,
     getUserChangelProfile,
