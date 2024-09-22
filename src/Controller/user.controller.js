@@ -3,7 +3,6 @@ import { ApiError } from "../utils/ApiError.js"
 import { User } from "../models/user.model.js"
 import { uploadOnCloudinary } from "../utils/cloudinary.js"
 import { ApiResponse } from "../utils/ApiResponse.js";
-import { response } from 'express';
 
 
 const generateAccessAndRefreshToken = async (userId) => {
@@ -118,11 +117,16 @@ const loginUser = asyncHandler(async (req, res) => {
     // send the response 
 
     const { username, email, password } = req.body
-
-    if (!username || !email) {
-        throw new ApiError(400, "username or email is required")
+    console.log(username, password)
+    if (!username && !email) {
+        throw new ApiError(400, "username and  email is required")
     }
 
+
+    // here we have only one credential 
+    if (!(username || email)) {
+        throw new ApiError(400, "Username or email is required");
+    }
     const user = await User.findOne({
         $or: [{ username }, { email }]
     })
@@ -146,8 +150,7 @@ const loginUser = asyncHandler(async (req, res) => {
         secure: true
     }
 
-    return res
-        .status(200)
+    return res.status(200)
         .cookie("accessToken", accessToken, options)
         .cookie("refreshToken", refreshToken, options)
         .json(
@@ -155,9 +158,9 @@ const loginUser = asyncHandler(async (req, res) => {
                 200,
                 {
                     user: loggedInUSer, accessToken, refreshToken
-                }
+                },
+                "User logged in successfully"
             ),
-            "User logged in successfully"
         )
 })
 

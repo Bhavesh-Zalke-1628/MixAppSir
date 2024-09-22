@@ -1,8 +1,8 @@
 import { config } from "dotenv";
-import { ApiError } from "../utils/ApiError";
-import { asyncHandler } from "../utils/asynHandler";
+import { ApiError } from "../utils/ApiError.js";
+import { asyncHandler } from "../utils/asynHandler.js";
 import jwt from 'jsonwebtoken'
-import { User } from "../models/user.model";
+import { User } from "../models/user.model.js";
 config()
 // If we not used any the parameter we can used the "_"
 export const verifyJWT = asyncHandler(async (req, _, next) => {
