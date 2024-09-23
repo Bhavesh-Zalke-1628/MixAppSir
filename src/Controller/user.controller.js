@@ -255,15 +255,16 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
 })
 
 const getCurrentUser = asyncHandler(async (req, res) => {
+    console.log(req.user)
     return res
         .status(200)
-        .json(200, req.user, "Current user fetched successfully");
+        .json(new ApiResponse(200, req.user, "Current user fetched successfully"));
 })
 
 const updateAccountDetailed = asyncHandler(async (req, res) => {
-    const { fullName, email } = req.body
-
-    if (!fullName || !email) {
+    const { username, email } = req.body
+    console.log(username, email)
+    if (!username || !email) {
         throw new ApiError(400, "All field is required")
     }
 
@@ -271,13 +272,14 @@ const updateAccountDetailed = asyncHandler(async (req, res) => {
         req.user?._id,
         {
             $set: {
-                fullName,
+                username,
                 email
             }
         },
         { new: true }
     ).select('-password');
-
+    console.log('hello')
+    console.log(user)
     return res
         .status(200)
         .json(new ApiResponse(200, user, "Account details updated successfully"));
@@ -308,9 +310,11 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
     return res
         .status(200)
         .json(
-            200,
-            user,
-            "Avtar image update successfully"
+            new ApiResponse(
+                200,
+                user,
+                "Avtar image update successfully"
+            )
         )
 })
 
@@ -327,7 +331,7 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Error while uploading on avatar");
     }
 
-    const user = await User.findByIdAndDelete(req.user?._id,
+    const user = await User.findByIdAndUpdate(req.user?._id,
         {
             $set: {
                 coverImage: coverImage.url
@@ -345,7 +349,7 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
         )
 })
 
-const getUserChangelProfile = asyncHandler(async (req, res) => {
+const getUserChanelProfile = asyncHandler(async (req, res) => {
     const { username } = req.params;
     if (!username?.trim) {
         throw new ApiError(400, "Username is missing");
@@ -476,6 +480,6 @@ export {
     getCurrentUser,
     updateUserAvatar,
     updateUserCoverImage,
-    getUserChangelProfile,
+    getUserChanelProfile,
     getWatchHistory
 }
